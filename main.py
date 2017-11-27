@@ -36,6 +36,8 @@ def main():
 
     if options.mode == 'train':
         import pgportfolio.autotrain.training
+        if not options.algo:
+            pgportfolio.autotrain.training.train_all(int(options.processes), options.device)
 
 
 if __name__ == 'main':
