@@ -6,7 +6,18 @@ import time
 from multiprocessing import Process
 
 
-def train_one(args):
+def train_one(save_path, config, log_file_dir, index, logfile_level, console_level, device):
+    """
+    エージェントをトレーニングします。
+    :param save_path: TensorFlowのモデル(.ckpt)を保存するパス。None可。
+    :param config: jsonのコンフィグファイル
+    :param log_file_dir: TensorBoardのログファイルを保存するディレクトリ。None可。
+    :param index: トレーニングを一意に定めるインデックス。train_packageのサブディレクトリ名。
+    :param logfile_level: ファイルのログレベル
+    :param console_level:
+    :param device:
+    :return:
+    """
     pass
 
 
@@ -15,11 +26,11 @@ def load_config(dir):
 
 
 def train_all(processes=1, device='cpu'):
-    '''
+    """
     train_packageディレクトリ内のすべてのエージェントをトレーニングします。
     :param processes: プロセス数。ログレベルにも影響します。
     :param device: CPUとGPUのどちらを使用するか
-    '''
+    """
     if processes == 1:
         console_level = logging.INFO
         logfile_level = logging.DEBUG
