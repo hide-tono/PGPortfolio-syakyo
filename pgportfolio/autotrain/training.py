@@ -5,6 +5,9 @@ import time
 
 from multiprocessing import Process
 
+from pgportfolio.learn.tradertrainer import TraderTrainer
+from pgportfolio.tools.configprocess import load_config
+
 
 def train_one(save_path, config, log_file_dir, index, logfile_level, console_level, device):
     """
@@ -14,15 +17,19 @@ def train_one(save_path, config, log_file_dir, index, logfile_level, console_lev
     :param log_file_dir: TensorBoardのログファイルを保存するディレクトリ。None可。
     :param index: トレーニングを一意に定めるインデックス。train_packageのサブディレクトリ名。
     :param logfile_level: ファイルのログレベル
-    :param console_level:
-    :param device:
-    :return:
+    :param console_level: コンソールのログレベル
+    :param device: 0ならCPU、1ならGPU。
+    :return: 結果のnamedtuple
     """
-    pass
-
-
-def load_config(dir):
-    pass
+    if log_file_dir:
+        logging.basicConfig(filename=log_file_dir.replace('tensorboard', 'programlog'),
+                            lovel=logfile_level)
+        console = logging.StreamHandler()
+        console.setLevel(console_level)
+        logging.getLogger().addHandler(console)
+    print('training at %s started' % index)
+    trainer = TraderTrainer(config, save_path=save_path, device=device)
+    return trainer.train_net(log_file_dir=log_file_dir, index=index)
 
 
 def train_all(processes=1, device='cpu'):
@@ -41,22 +48,22 @@ def train_all(processes=1, device='cpu'):
     if not os.path.exists('./' + train_dir):
         os.makedirs('./' + train_dir)
     all_subdir = os.listdir('./' + train_dir)
-    all.subdir.sort()
+    all_subdir.sort()
     # プロセスプール。train_package以下で未実行の数字ディレクトリを実効する
     pool = []
-    for dir in all_subdir:
-        if not str.isdigit(dir):
+    for subdir in all_subdir:
+        if not str.isdigit(subdir):
             # 数字ディレクトリ以外は許容しない
             return
-        if not (os.path.isdir('./' + train_dir + '/' + dir + '/tensorboard') or
-                    os.path.isdir('./' + train_dir + '/' + dir + '/logifle')):
+        if not (os.path.isdir('./' + train_dir + '/' + subdir + '/tensorboard') or
+                    os.path.isdir('./' + train_dir + '/' + subdir + '/logifle')):
             # 未実行の数字ディレクトリのみ実行する
             p = Process(target=train_one,
                         # train_oneの引数
-                        args=("./" + train_dir + "/" + dir + "/netfile",
-                              load_config(dir),
-                              "./" + train_dir + "/" + dir + "/tensorboard",
-                              dir, logfile_level, console_level, device))
+                        args=("./" + train_dir + "/" + subdir + "/netfile",
+                              load_config(subdir),
+                              "./" + train_dir + "/" + subdir + "/tensorboard",
+                              subdir, logfile_level, console_level, device))
             p.start()
             pool.append(p)
         else:

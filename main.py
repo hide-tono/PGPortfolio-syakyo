@@ -40,5 +40,5 @@ def main():
             pgportfolio.autotrain.training.train_all(int(options.processes), options.device)
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     main()
