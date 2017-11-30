@@ -3,7 +3,11 @@ import logging
 from argparse import ArgumentParser
 import os
 
-from pgportfolio.tools.configprocess import load_config
+import time
+
+from datetime import datetime
+
+from pgportfolio.tools.configprocess import load_config, preprocess_config
 
 
 def build_parser():
@@ -53,6 +57,10 @@ def main():
         with open('./pgportfolio/net_config.json') as file:
             config =json.load(file)
         config = preprocess_config(file)
+        # コンフィグのインプットから開始日、終了日を取得
+        start = time.mktime(datetime.strptime(config["input"]["start_date"], "%Y/%m/%d").timetuple())
+        end = time.mktime(datetime.strptime(config["input"]["end_date"], "%Y/%m/%d").timetuple())
+
 
 
 if __name__ == '__main__':
