@@ -1,5 +1,8 @@
+import logging
 from argparse import ArgumentParser
 import os
+
+from pgportfolio.tools.configprocess import load_config
 
 
 def build_parser():
@@ -38,6 +41,12 @@ def main():
         import pgportfolio.autotrain.training
         if not options.algo:
             pgportfolio.autotrain.training.train_all(int(options.processes), options.device)
+        else:
+            raise NotImplementedError()
+    elif options.mode == 'generate':
+        import pgportfolio.autotrain.generate as generate
+        logging.basicConfig(level=logging.INFO)
+        generate.add_packages(load_config(), int(options.repeat))
 
 
 if __name__ == '__main__':
