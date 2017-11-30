@@ -1,3 +1,4 @@
+import json
 import logging
 from argparse import ArgumentParser
 import os
@@ -47,6 +48,11 @@ def main():
         import pgportfolio.autotrain.generate as generate
         logging.basicConfig(level=logging.INFO)
         generate.add_packages(load_config(), int(options.repeat))
+    elif options.mode == 'download_data':
+        from pgportfolio.marketdata.datamatrices import DataMatrices
+        with open('./pgportfolio/net_config.json') as file:
+            config =json.load(file)
+        config = preprocess_config(file)
 
 
 if __name__ == '__main__':
