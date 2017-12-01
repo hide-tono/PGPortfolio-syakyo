@@ -1,3 +1,4 @@
+from pgportfolio.tools.data import get_volume_forward
 
 
 class DataMatrices:
@@ -15,8 +16,9 @@ class DataMatrices:
         :param coin_filter: 使用するコインの数
         :param window_size:入力データの数
         :param feature_number:特徴量の数。1～4 (2は未実装)
-        :param test_portion:
-        :param portion_reserved:
+        :param test_portion:開始時間・終了時間の間で使用する割合(0～1)?
+        :param portion_reserved:部分でtestとtrainのどちらを使用するか。
+        Falseだとtrain, validation, test, Trueだとtest, validation, train。Boolean
         :param online:
         :param is_permed:
         """
@@ -26,6 +28,12 @@ class DataMatrices:
         # window_sizeがMIN_NUM_PERIOD以上であること
         self.__coin_no = coin_filter
         type_list = get_type_list(feature_number)
+        self.__features = type_list
+        self.feature_number = feature_number
+        volume_forward = get_volume_forward(self.__end - start, test_portion, portion_reserved)
+        self.__history_manager = gdm.HistoryManager(coin_number=coin_filter, end=self.__end,
+                                                    volume_average_days=volume_average_days,
+                                                    volume_forward=volume_forward, online=online)
 
 
 def get_type_list(feature_number):
