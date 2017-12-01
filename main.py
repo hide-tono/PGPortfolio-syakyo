@@ -60,6 +60,7 @@ def main():
         # コンフィグのインプットから開始日、終了日を取得
         start = time.mktime(datetime.strptime(config["input"]["start_date"], "%Y/%m/%d").timetuple())
         end = time.mktime(datetime.strptime(config["input"]["end_date"], "%Y/%m/%d").timetuple())
+        # FIXME
 
 
 

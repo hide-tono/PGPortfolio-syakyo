@@ -1,5 +1,5 @@
 from pgportfolio.tools.data import get_volume_forward
-
+import pgportfolio.marketdata.globaldatamatrix as gdm
 
 class DataMatrices:
     def __init__(self, start, end, period, batch_size=50, volume_average_days=30, buffer_bias_ratio=0,
@@ -34,6 +34,7 @@ class DataMatrices:
         self.__history_manager = gdm.HistoryManager(coin_number=coin_filter, end=self.__end,
                                                     volume_average_days=volume_average_days,
                                                     volume_forward=volume_forward, online=online)
+        # FIXME
 
 
 def get_type_list(feature_number):
