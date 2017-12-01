@@ -32,7 +32,7 @@ def get_type_list(feature_number):
     """
     特徴量名のリストを返します。
     :param feature_number: 特徴量の数。1～4 (2は未実装)
-    :return: 1:close, 2:volume, 3:high, low, 4open
+    :return: 1:close, 2:close, volume, 3:close, high, low, 4:close, high, low, open
     """
     if feature_number == 1:
         return ['close']
